@@ -1,22 +1,31 @@
 package main.java.com.javadventure.player;
 
+import main.java.com.javadventure.Items.Item;
 import main.java.com.javadventure.gamedriver.GameObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Player extends GameObject {
 	private int xp = 0;
 	private int attack = 1;
+	private int defense = 1;
 	private int maxHp = 10;
 	private int currentHp = 10;
 	private int potions = 10;
 	private int level = 1;
 	String name;
+	String description = "A player";
+	Map<String, Item> itemMap = new HashMap<>();
+	//TODO fix description string;
 	public Player(String name){
 		this.name = name;
 	}
 
-	public Player(int xp, int attack, int maxHp, int currentHp, int potions, int level, String name) {
+	public Player(int xp, int attack, int defense, int maxHp, int currentHp, int potions, int level, String name) {
 		this.xp = xp;
 		this.attack = attack;
+		this.defense = defense;
 		this.maxHp = maxHp;
 		this.currentHp = currentHp;
 		this.potions = potions;
@@ -115,6 +124,9 @@ public class Player extends GameObject {
 
 	public String toString(){
 		return name + "|| HP: " + currentHp + " / " + maxHp + "||" + "Level: " + level + "||" + "Potions: " + potions;
+	}
+	public String toSaveFormatting(){
+		return name + ","+ level + "," + currentHp +"," + maxHp + "," + potions + "," + xp + "," + description + "," + attack;
 	}
 
 }

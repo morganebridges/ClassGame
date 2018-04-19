@@ -1,9 +1,18 @@
 package main.java.com.javadventure.gamedriver;
 
+import main.java.com.javadventure.gamedriver.commandHandlers.LoginHandler;
+import main.java.com.javadventure.gamedriver.persistence.CharacterLoader;
+import main.java.com.javadventure.gamedriver.persistence.CharacterSaver;
 import main.java.com.javadventure.gamedriver.utils.InputSanitizer;
+import main.java.com.javadventure.help.Help;
+import main.java.com.javadventure.map.GameMap;
+import main.java.com.javadventure.map.MapBuilder;
+import main.java.com.javadventure.map.MovementHandler;
+import main.java.com.javadventure.map.rooms.Room;
 import main.java.com.javadventure.monsters.Monster;
 import main.java.com.javadventure.player.Player;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -12,7 +21,8 @@ public class GameDriver {
 	public static boolean isTerminated = false;
 
 	//A data structure for containing the active players in the game
-	private static Map<String, Player> activePlayersMap;
+	private static Map<String, Player> activePlayersMap = new HashMap<>();
+	private static Player player1;
 
 	//An input stream to get input from the keyboard
 	private static Scanner in = new Scanner(System.in);
@@ -22,47 +32,66 @@ public class GameDriver {
 
 	//A utility for sanitizing text input
 	private static InputSanitizer san = new InputSanitizer();
-	public static void main(String[] args){
-		System.out.println("What is your name, player?");
-		String name = in.next();
 
-		Player player = new Player(name);
-		Monster monster = null;
+	//The game map
+	private static GameMap map = MapBuilder.buildMap();
+
+	//Current room
+	private static Room currentRoom = map.getRoomByName("loginRoom");
+	public static void main(String[] args){
+		//Pass the work to the login handler
+		loginLoop();
 
 	}
-	private void mainLoop(){
+	private static void mainLoop(){
 			while(!isTerminated){
+				System.out.println(player1.toString());
+				String nextCommand = san(in.next());
 
+				if(nextCommand.equals("q") || nextCommand.equals("quit")){
+					System.out.println("Thank you for playing, " + player1.getName());
+					activePlayersMap.remove(player1.getName());
+					player1 = null;
+					loginLoop();
+				}else if(nextCommand.equals("look") || nextCommand.equals("l")){
+					if(currentRoom != null){
+						System.out.println(currentRoom.toDisplay());
+					}
+				}else if(nextCommand.contains("fight")){
+
+				}else if(nextCommand.contains("search")){
+
+				}else if(nextCommand.contains("help") || nextCommand.equals("h")){
+					if(nextCommand.equals("help")){
+						System.out.println(Help.callHelp());
+					}
+				}else if(nextCommand.equals("save")){
+					CharacterSaver.saveCharacter(player1);
+				}else if(MovementHandler.isMovementCommand(nextCommand)){
+						currentRoom = MovementHandler.handleMovement(nextCommand, currentRoom, map);
+						System.out.println(currentRoom.toDisplay());
+				}else{
+					System.out.println("I'm not sure I understood you...");
+				}
 			}
 	}
-	private void loginLoop(){
+	private static void loginLoop(){
 		printSeperator();
 		System.out.println("Welcome to JavAdventure!");
-		while(activePlayersMap.size() == 0){
-			System.out.println("Are you a {n}ew player or would you like to {l}oad a character");
-			String command = san(in.next());
-
-			if(command.equals("l")){
-				System.out.println("What is your name?");
-				try{
-					Player player = CharacterLoader.loadOne(san(in.next()));
-					activePlayersMap.put(player.getName(), player);
-					continue;
-				}catch(Exception e) {
-					System.out.println("Was not able to load character, did you type your name correctly?");
-				}
-			}else if(command.equals("n")){
-				
-			}
-		}
+		Player player;
+		while((player = LoginHandler.login(in)) == null);
+		activePlayersMap.put(player.getName(), player);
+		player1 = player;
+		mainLoop();
 	}
 
-	private static void printSeperator(){
+	public static void printSeperator(){
 		System.out.println("} }}  }}}__--^^^--___ -  -  - ___--^^^--__{{{   {{ {");
 	}
-	private static String san(String in){
+	public  static String san(String in){
 		return san.san(in);
 	}
+	//private static Player
 		
 
 	
