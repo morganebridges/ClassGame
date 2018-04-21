@@ -18,8 +18,9 @@ public class Player extends GameObject {
 	String name;
 	String description = "A player";
 
-
+	private static final String stars = "\n**************";
 	Map<String, Item> itemMap = new HashMap<>();
+
 	//TODO fix description string;
 	public Player(String name){
 		this.name = name;
@@ -36,8 +37,8 @@ public class Player extends GameObject {
 		this.name = name;
 	}
 
-	public void defeatMonster(){
-		xp++;
+	public void defeatMonster(int xp){
+		this.xp += xp;
 		if(xp % 5 == 0){
 			levelUp();
 		}
@@ -70,7 +71,12 @@ public class Player extends GameObject {
 	}
 
 	public void addItem(Item item){
-		itemMap.put(item.getName(),  item);
+		if(itemMap.containsKey(item.getName())){
+			itemMap.get(item.getName()).increaseBy(item.getCount());
+
+		}else{
+			itemMap.put(item.getName(),  item);
+		}
 	}
 	public void removeItem(String itemName){
 		Item item;
@@ -85,17 +91,24 @@ public class Player extends GameObject {
 	}
 
 	public String getInventoryString(){
-		String stars = "\n**************";
 		String inv = stars;
 		if(itemMap.size() != 0) {
 			for (Map.Entry<String, Item> itemEntry : itemMap.entrySet()) {
-				inv += "\n" + itemEntry.getValue().getName();
+				Item item = itemEntry.getValue();
+				inv += "\n" + itemEntry.getValue().getName() + (item.getCount() > 1 ? "(" + item.getCount() + ")" : "");
 			}
 		}else{
 			inv += "\nYou currently have no items in your inventory";
 		}
 		inv += stars;
 		return inv;
+	}
+	public String getScoreString(){
+		String score = stars;
+		score += "\nLevel: " + level;
+		score += "\nXP: " + xp;
+		score += "\nAttack power:" + attack;
+		return score;
 	}
 	public int getXp() {
 		return xp;
@@ -157,7 +170,14 @@ public class Player extends GameObject {
 		return name + "|| HP: " + currentHp + " / " + maxHp + "||" + "Level: " + level + "||" + "Potions: " + potions;
 	}
 	public String toSaveFormatting(){
-		return name + ","+ level + "," + currentHp +"," + maxHp + "," + potions + "," + xp + "," + description + "," + attack + "," + defense;
+		String saveString = name + ","+ level + "," + currentHp +"," + maxHp + "," + potions + "," + xp + "," + description + "," + attack + "," + defense + "<>";
+		String itemString = "";
+		for(Map.Entry<String, Item> itemEntry : itemMap.entrySet()){
+			itemString += itemEntry.getValue().toSaveString();
+		}
+
+		saveString += itemString;
+		return  saveString;
 	}
 
 }

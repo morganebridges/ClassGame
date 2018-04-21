@@ -13,6 +13,9 @@ public class MapBuilder {
         //Instantiate a new copy of the GameMap object
         GameMap map = new GameMap();
 
+        //This item dictionary will help us to load items from disk, it will keep a String -> Item reference
+        Map<String, Item> itemDictionary = new HashMap<>();
+
         //Here is where we construct some of our room objects. A handy "Builder" has been provided to make building the monsters easier
         Room loginRoom = new Room.Builder()
                 .name("loginRoom")
@@ -43,13 +46,18 @@ public class MapBuilder {
                 .addLookWord("monster")
                 .build();
 
-        //Add bob to our room
+        //Add Bob to our room
         eastLoginMonsters.put(goblin.getName(), goblin);
         eastLoginBuilder.monsters(eastLoginMonsters);
+
         //Add a map to represent our room items
         Map<String, Item> eastLoginItemMap = new HashMap<>();
+
         //How about an item for our room?
         IronSword sword = new IronSword();
+
+        //Add sword to item dictionary
+        itemDictionary.put(sword.getName(), sword);
 
         eastLoginItemMap.put(sword.getName(), sword);
 
@@ -64,6 +72,8 @@ public class MapBuilder {
             .addRoom(loginRoom)
             .addRoom(eastLogin)
             ;
+
+        map.setItemDictionary(itemDictionary);
 
 
 

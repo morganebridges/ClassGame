@@ -67,6 +67,7 @@ public class CombatHandler {
                         monsterRoomMap.remove(currentMonster.getName());
                         currentMonster = null;
                     }
+                    System.out.println(player.toString());
                     sleep(roundTime.toMillis());
                 } catch (InterruptedException e) {
                     e.printStackTrace();

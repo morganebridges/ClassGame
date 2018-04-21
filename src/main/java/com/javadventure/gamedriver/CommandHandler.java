@@ -28,7 +28,6 @@ public class CommandHandler {
             }else if(currentRoom != null){
                 System.out.println(currentRoom.toDisplay());
             }
-
         }else if(nextCommand.contains("fight")){
             CombatHandler handler = new CombatHandler();
             handler.startCombat(in, getMonsterList(currentRoom.getRoomMonsters()), currentRoom.getRoomMonsters(), player, currentRoom, map);
@@ -54,6 +53,8 @@ public class CommandHandler {
             System.out.println(currentRoom.toDisplay());
         }else if(nextCommand.equals("i") || nextCommand.equals("inventory")){
             System.out.println(player.getInventoryString());
+        }else if(nextCommand.equals("sc") || nextCommand.equals("score")){
+            System.out.println(player.getScoreString());
         }else{
             System.out.println("I'm not sure I understood you...");
         }

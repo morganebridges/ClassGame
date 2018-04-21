@@ -12,6 +12,7 @@ public class Monster extends GameObject {
 	protected int currentHp = 5;
 	protected int attack = 1;
 	protected boolean agro = false;
+	protected int xpValue = 2;
 
 	protected String description = "";
 	protected String name;
@@ -25,7 +26,7 @@ public class Monster extends GameObject {
 	public boolean attack(Player player){
 		currentHp -= player.getAttack();
 		if(currentHp <= 0){
-			player.defeatMonster();
+			player.defeatMonster(xpValue);
 			return true;
 		}else{
 			return false;

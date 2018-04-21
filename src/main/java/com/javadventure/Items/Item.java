@@ -62,14 +62,24 @@ public class Item {
     public void setDescription(String description) {
         this.description = description;
     }
+    public void increaseBy(int number){
+        count += number;
+    }
     public void decrementCount(){
         if(count < 0){
             count = count--;
         }
     }
+    public String toSaveString(){
+        return name + "," + count + "|";
+    }
+
     public void incrementCount(){
         count += 1;
     }
+
+
+
     public static class Builder{
         String name;
         String description;
@@ -124,6 +134,8 @@ public class Item {
             item.getLookList().addAll(lookList);
             return item;
         }
+
+
 
     }
 }

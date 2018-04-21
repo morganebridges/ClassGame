@@ -1,8 +1,10 @@
 package main.java.com.javadventure.gamedriver.persistence;
 
+import main.java.com.javadventure.map.GameMap;
 import main.java.com.javadventure.player.Player;
 
 import java.io.*;
+import java.util.regex.Pattern;
 
 /**
  * A class that has the ability to load a character from a flat file.
@@ -32,15 +34,30 @@ public class CharacterLoader {
         return false;
     }
 
-    public static Player loadOne(String charName) {
+    public static Player loadOne(String charName, GameMap map) {
         try {
             if(characterExists(charName)){
                 BufferedReader inputStream = new BufferedReader(new FileReader("game.save"));
                 String currentLine;
                 while((currentLine = inputStream.readLine()) != null){
                     if(currentLine.contains(charName)){
-                        String[] charProfile = currentLine.split(",");
-                        return parseRecord(charProfile);
+                        String[] charArray = currentLine.split("<>");
+                        String info = charArray[0];
+                        String[] charProfile = info.split(",");
+                        Player record = parseRecord(charProfile);
+                        //Load the items from disk
+                        if(charArray.length == 2){
+                            for(String itemToken : charArray[1].split(Pattern.quote("|"))){
+                                String[] itemEntry = itemToken.split(",");
+                                if(itemEntry.length == 2){
+                                    if(map.getItemDictionary().containsKey(itemEntry[0])){
+                                        record.addItem(map.getItemDictionary().get(itemEntry[0]));
+                                    }
+                                }
+                            }
+                            return record;
+                        }
+
                     }
                 }
             }
@@ -69,10 +86,5 @@ public class CharacterLoader {
 
         }
     }
-    public static void main(String[] args){
-        String workingDir = System.getProperty("user.dir");
-        System.out.println("Current working directory : " + workingDir);
-        Player player = loadOne("name");
-        System.out.println(loadOne("name"));
-    }
+
 }

@@ -27,9 +27,6 @@ public class GameDriver {
 	//An input stream to get input from the keyboard
 	private static Scanner in = new Scanner(System.in);
 
-	//A dictionary of valid commands
-	private static CommandDictionary comDict = new CommandDictionary();
-
 	//A utility for sanitizing text input
 	private static InputSanitizer san = new InputSanitizer();
 
@@ -64,7 +61,7 @@ public class GameDriver {
 		printSeperator();
 		System.out.println("Welcome to JavAdventure!");
 		Player player;
-		while((player = LoginHandler.login(in)) == null);
+		while((player = LoginHandler.login(in, map)) == null);
 		activePlayersMap.put(player.getName(), player);
 		activePlayer = player;
 		map.setCurrentRoom(map.getRoomByName("loginRoom"));
