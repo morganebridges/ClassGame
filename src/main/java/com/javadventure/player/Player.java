@@ -2,6 +2,7 @@ package main.java.com.javadventure.player;
 
 import main.java.com.javadventure.Items.Item;
 import main.java.com.javadventure.gamedriver.GameObject;
+import main.java.com.javadventure.map.GameMap;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,6 +17,8 @@ public class Player extends GameObject {
 	private int level = 1;
 	String name;
 	String description = "A player";
+
+
 	Map<String, Item> itemMap = new HashMap<>();
 	//TODO fix description string;
 	public Player(String name){
@@ -66,6 +69,34 @@ public class Player extends GameObject {
 		}
 	}
 
+	public void addItem(Item item){
+		itemMap.put(item.getName(),  item);
+	}
+	public void removeItem(String itemName){
+		Item item;
+		if((item = itemMap.get(itemName)) != null){
+			//If we have more than one of an item, decrement, otherwise, remove the item
+			if(item.getCount()  > 0){
+				item.decrementCount();
+			}else{
+				itemMap.remove(itemName);
+			}
+		}
+	}
+
+	public String getInventoryString(){
+		String stars = "\n**************\n";
+		String inv = stars;
+		if(itemMap.size() != 0) {
+			for (Map.Entry<String, Item> itemEntry : itemMap.entrySet()) {
+				inv += "\n" + itemEntry.getValue().getName();
+			}
+		}else{
+			inv += "You currently have no items in your inventory";
+		}
+		inv += stars;
+		return inv;
+	}
 	public int getXp() {
 		return xp;
 	}

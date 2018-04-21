@@ -22,7 +22,7 @@ public class GameDriver {
 
 	//A data structure for containing the active players in the game
 	private static Map<String, Player> activePlayersMap = new HashMap<>();
-	private static Player player1;
+	private static Player activePlayer;
 
 	//An input stream to get input from the keyboard
 	private static Scanner in = new Scanner(System.in);
@@ -36,6 +36,9 @@ public class GameDriver {
 	//The game map
 	private static GameMap map = MapBuilder.buildMap();
 
+	//An object to encapsulate the handling of user commands
+	private static CommandHandler cmdHandler = new CommandHandler();
+
 	//Current room
 	private static Room currentRoom = map.getRoomByName("loginRoom");
 	public static void main(String[] args){
@@ -44,36 +47,18 @@ public class GameDriver {
 
 	}
 	private static void mainLoop(){
-			while(!isTerminated){
-				System.out.println(player1.toString());
-				String nextCommand = san(in.next());
-
-				if(nextCommand.equals("q") || nextCommand.equals("quit")){
-					System.out.println("Thank you for playing, " + player1.getName());
-					activePlayersMap.remove(player1.getName());
-					player1 = null;
-					loginLoop();
-				}else if(nextCommand.equals("look") || nextCommand.equals("l")){
-					if(currentRoom != null){
-						System.out.println(currentRoom.toDisplay());
-					}
-				}else if(nextCommand.contains("fight")){
-
-				}else if(nextCommand.contains("search")){
-
-				}else if(nextCommand.contains("help") || nextCommand.equals("h")){
-					if(nextCommand.equals("help")){
-						System.out.println(Help.callHelp());
-					}
-				}else if(nextCommand.equals("save")){
-					CharacterSaver.saveCharacter(player1);
-				}else if(MovementHandler.isMovementCommand(nextCommand)){
-						currentRoom = MovementHandler.handleMovement(nextCommand, currentRoom, map);
-						System.out.println(currentRoom.toDisplay());
-				}else{
-					System.out.println("I'm not sure I understood you...");
-				}
+		while(!isTerminated){
+			in = new Scanner(System.in);
+			String nextCommand = san(in.nextLine());
+			if(nextCommand.equals("q") || nextCommand.equals("quit")){
+				System.out.println("Thank you for playing, " + activePlayer.getName());
+				activePlayersMap.remove(activePlayer.getName());
+				activePlayer = null;
+				isTerminated = true;
+			}else{
+				cmdHandler.handleCommand(activePlayer, map, nextCommand);
 			}
+		}
 	}
 	private static void loginLoop(){
 		printSeperator();
@@ -81,7 +66,9 @@ public class GameDriver {
 		Player player;
 		while((player = LoginHandler.login(in)) == null);
 		activePlayersMap.put(player.getName(), player);
-		player1 = player;
+		activePlayer = player;
+		map.setCurrentRoom(map.getRoomByName("loginRoom"));
+		System.out.println(map.getCurrentRoom().toDisplay());
 		mainLoop();
 	}
 
