@@ -15,6 +15,7 @@ public class Help {
         helpString += "\nTake an item: 'take' + <item name> ...ex: 'take sword'";
         helpString += "\nQuit: 'quit' or 'q'";
         helpString += "\nMovement: 'n' 's' 'e' 'w' for room exits to the north, south, east, and west";
+        helpString += "\nPotion: type 'drink' (or 'dr' for short) to consume a potion and raise your current hp";
         helpString += stars + "\n\n";
         return helpString;
     }

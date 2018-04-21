@@ -39,7 +39,7 @@ public class Player extends GameObject {
 
 	public void defeatMonster(int xp){
 		this.xp += xp;
-		if(xp % 5 == 0){
+		if(this.xp / 10 >= level){
 			levelUp();
 		}
 	}
@@ -48,6 +48,7 @@ public class Player extends GameObject {
 		currentHp +=2;
 		attack++;
 		level ++;
+		System.out.println("Congratulations, you have reached level " + level + "!");
 	}
 	public void heal(){
 		if(potions > 0 && currentHp < maxHp){
@@ -160,6 +161,20 @@ public class Player extends GameObject {
 
 	public String getName() {
 		return name;
+	}
+
+	public void drinkPotion(){
+		if(potions > 0){
+			if((currentHp + 5) < maxHp){
+				currentHp = maxHp;
+			}else{
+				currentHp += 5;
+			}
+			potions--;
+			System.out.println("You drink a potion");
+		}else{
+			System.out.println("You have no potions to drink");
+		}
 	}
 
 	public void setName(String name) {

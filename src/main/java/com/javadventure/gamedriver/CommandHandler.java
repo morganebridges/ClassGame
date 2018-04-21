@@ -55,6 +55,8 @@ public class CommandHandler {
             System.out.println(player.getInventoryString());
         }else if(nextCommand.equals("sc") || nextCommand.equals("score")){
             System.out.println(player.getScoreString());
+        }else if(nextCommand.equals("drink") ||  nextCommand.equals("dr")){
+            player.drinkPotion();
         }else{
             System.out.println("I'm not sure I understood you...");
         }

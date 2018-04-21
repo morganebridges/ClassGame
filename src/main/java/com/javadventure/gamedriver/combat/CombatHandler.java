@@ -1,5 +1,6 @@
 package main.java.com.javadventure.gamedriver.combat;
 
+import main.java.com.javadventure.gamedriver.CommandHandler;
 import main.java.com.javadventure.map.GameMap;
 import main.java.com.javadventure.map.MovementHandler;
 import main.java.com.javadventure.map.rooms.MovementDirections;
@@ -13,8 +14,9 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class CombatHandler {
-
+    CommandHandler cmdHandler;
     public void startCombat(Scanner in, List<Monster> monsterList, Map<String, Monster> monsterRoomMap, Player player, Room room, GameMap map){
+        this.cmdHandler = new CommandHandler();
         CombatThread thread = new CombatThread(monsterList, monsterRoomMap, player);
         thread.start();
         while(thread.combatContinue){
@@ -28,6 +30,8 @@ public class CombatHandler {
                    map.setCurrentRoom(attemptedTarget);
                    thread.flee();
                }
+            }else{
+                cmdHandler.handleCommand(player, map, nextCommand, in);
             }
             try {
                 //Wait before checking the scanner for a new input
