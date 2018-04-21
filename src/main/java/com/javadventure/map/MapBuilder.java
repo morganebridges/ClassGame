@@ -38,11 +38,14 @@ public class MapBuilder {
                 .description("A furry goblin, he looks happy enough...")
                 .hp(5)
                 .name("Bob the Hobgoblin")
+                .addLookWord("bob")
+                .addLookWord("goblin")
+                .addLookWord("monster")
                 .build();
 
         //Add bob to our room
         eastLoginMonsters.put(goblin.getName(), goblin);
-
+        eastLoginBuilder.monsters(eastLoginMonsters);
         //Add a map to represent our room items
         Map<String, Item> eastLoginItemMap = new HashMap<>();
         //How about an item for our room?

@@ -2,6 +2,7 @@ package main.java.com.javadventure.gamedriver.utils;
 
 import main.java.com.javadventure.Items.Item;
 import main.java.com.javadventure.map.rooms.Room;
+import main.java.com.javadventure.monsters.Monster;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,23 @@ public class RoomLooker {
             }
             if(matchedItems > 1){
                 return "I'm sorry, which item did you want to look at?";
+            }
+
+        }
+        if(room.getRoomMonsters() != null){
+            for(Map.Entry<String, Monster> monsterEntry : room.getRoomMonsters().entrySet()){
+                List<String> lookList = monsterEntry.getValue().getLookList();
+                if(matchesForItem(command, lookList)){
+                    matchedItems++;
+                    correctDescription = monsterEntry.getValue().getDescription();
+
+                }
+            }
+            if(correctDescription.length() > 1 && matchedItems == 1){
+                return correctDescription;
+            }
+            if(matchedItems > 1){
+                return "I'm sorry, which monster did you want to look at?";
             }
 
         }

@@ -56,7 +56,7 @@ public class GameDriver {
 				activePlayer = null;
 				isTerminated = true;
 			}else{
-				cmdHandler.handleCommand(activePlayer, map, nextCommand);
+				cmdHandler.handleCommand(activePlayer, map, nextCommand, in);
 			}
 		}
 	}

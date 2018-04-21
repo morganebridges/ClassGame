@@ -128,13 +128,14 @@ public class Room {
                 }
             }
         }
-        disp += line;
+
 
         //Now we need to loop over all of the monsters, so we can display them in the room.
         if(roomMonsters != null && roomMonsters.size() > 0){
+            disp += "\n**************";
             for(Map.Entry<String, Monster> monsterEntry : roomMonsters.entrySet()){
                 Monster monster = monsterEntry.getValue();
-                disp +=  "n" + monster.getName();
+                disp +=  "\n" + monster.getName();
             }
         }
 
@@ -199,7 +200,10 @@ public class Room {
             return this;
         }
 
-
+        @Override
+        public boolean equals(Object obj){
+            return (obj instanceof Room && ((Room)obj).getName().equals(this.name));
+        }
 
         public Room build(){
             return new Room(name, description, label, northExit, southExit, eastExit, westExist, roomItems, roomMonsters);

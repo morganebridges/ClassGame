@@ -85,14 +85,14 @@ public class Player extends GameObject {
 	}
 
 	public String getInventoryString(){
-		String stars = "\n**************\n";
+		String stars = "\n**************";
 		String inv = stars;
 		if(itemMap.size() != 0) {
 			for (Map.Entry<String, Item> itemEntry : itemMap.entrySet()) {
 				inv += "\n" + itemEntry.getValue().getName();
 			}
 		}else{
-			inv += "You currently have no items in your inventory";
+			inv += "\nYou currently have no items in your inventory";
 		}
 		inv += stars;
 		return inv;
@@ -157,7 +157,7 @@ public class Player extends GameObject {
 		return name + "|| HP: " + currentHp + " / " + maxHp + "||" + "Level: " + level + "||" + "Potions: " + potions;
 	}
 	public String toSaveFormatting(){
-		return name + ","+ level + "," + currentHp +"," + maxHp + "," + potions + "," + xp + "," + description + "," + attack;
+		return name + ","+ level + "," + currentHp +"," + maxHp + "," + potions + "," + xp + "," + description + "," + attack + "," + defense;
 	}
 
 }

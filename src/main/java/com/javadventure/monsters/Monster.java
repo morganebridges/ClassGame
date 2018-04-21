@@ -1,7 +1,11 @@
 package main.java.com.javadventure.monsters;
 
+import main.java.com.javadventure.Items.Item;
 import main.java.com.javadventure.gamedriver.GameObject;
 import main.java.com.javadventure.player.Player;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Monster extends GameObject {
 	protected int maxHp = 5;
@@ -11,20 +15,19 @@ public class Monster extends GameObject {
 
 	protected String description = "";
 	protected String name;
+	protected List<String> lookList = new ArrayList<>();
 
-	
+
 	public Monster(String name){
 		this.name = name;
 	}
 
 	public boolean attack(Player player){
-		currentHp -= player.getCurrentHp();
+		currentHp -= player.getAttack();
 		if(currentHp <= 0){
-			System.out.println("You defeat the monster");
 			player.defeatMonster();
 			return true;
 		}else{
-			System.out.println("You hit the monster for " + player.getAttack() + " damage");
 			return false;
 		}
 	}
@@ -93,8 +96,15 @@ public class Monster extends GameObject {
 		return name;
 	}
 
+	public void addLookWord(String lookWord){
+		lookList.add(lookWord);
+	}
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public List<String> getLookList(){
+		return lookList;
 	}
 
 	public static class Builder {
@@ -103,6 +113,7 @@ public class Monster extends GameObject {
 		int attack;
 		String description;
 		boolean agro;
+		List<String> lookList = new ArrayList<>();
 
 		public Builder name(String name){
 			this.name = name;
@@ -125,8 +136,14 @@ public class Monster extends GameObject {
 			this.agro = isAgro;
 			return this;
 		}
+		public Builder addLookWord(String lookWord){
+			lookList.add(lookWord);
+			return this;
+		}
 		public Monster build(){
-			return new Monster(name, maxHp, attack, description, agro);
+			Monster monster = new Monster(name, maxHp, attack, description, agro);
+			monster.getLookList().addAll(lookList);
+			return monster;
 		}
 
 	}
