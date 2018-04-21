@@ -6,6 +6,7 @@ import main.java.com.javadventure.gamedriver.persistence.CharacterSaver;
 import main.java.com.javadventure.gamedriver.utils.InputSanitizer;
 import main.java.com.javadventure.gamedriver.utils.ItemTaker;
 import main.java.com.javadventure.gamedriver.utils.RoomLooker;
+import main.java.com.javadventure.gamedriver.utils.WeaponWielder;
 import main.java.com.javadventure.help.Help;
 import main.java.com.javadventure.map.GameMap;
 import main.java.com.javadventure.map.MovementHandler;
@@ -47,6 +48,8 @@ public class CommandHandler {
             if(nextCommand.equals("help")){
                 System.out.println(Help.callHelp());
             }
+        }else if(nextCommand.contains("wield")){
+            WeaponWielder.wield(player, nextCommand);
         }else if(nextCommand.equals("save")){
             CharacterSaver.saveCharacter(player);
             System.out.println("You have saved your character");

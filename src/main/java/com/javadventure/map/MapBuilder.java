@@ -48,9 +48,22 @@ public class MapBuilder {
                 .addLookWord("monster")
                 .drops(Arrays.asList(new Gold(20), new IronSword()))
                 .build();
+        //Build our second monster
+        Monster goblin2 = new Monster.Builder()
+                .agro(false)
+                .attack(1)
+                .description("A furry goblin, he looks happy enough...")
+                .hp(5)
+                .name("Rob the Hobgoblin")
+                .addLookWord("bob")
+                .addLookWord("goblin")
+                .addLookWord("monster")
+                .drops(Arrays.asList(new Gold(20), new IronSword()))
+                .build();
 
         //Add Bob to our room
         eastLoginMonsters.put(goblin.getName(), goblin);
+        eastLoginMonsters.put(goblin2.getName(), goblin2);
         eastLoginBuilder.monsters(eastLoginMonsters);
 
         //Add a map to represent our room items

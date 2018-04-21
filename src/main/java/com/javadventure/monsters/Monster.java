@@ -26,7 +26,11 @@ public class Monster extends GameObject {
 	}
 
 	public boolean attack(Player player, Room room){
-		currentHp -= player.getAttack();
+		int weaponDamage = 0;
+		if(player.getCurrentWeapon() != null){
+			weaponDamage = player.getCurrentWeapon().getDamage();
+		}
+		currentHp -= player.getAttack() + weaponDamage;
 		if(currentHp <= 0){
 			//Add all of the monsters items
 			player.defeatMonster(xpValue);

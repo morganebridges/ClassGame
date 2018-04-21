@@ -13,4 +13,18 @@ public enum MovementDirections {
     public String getCommand(){
         return command;
     }
+    public static String getByCommand(String command){
+        switch(command){
+            case "w":
+                return "West";
+            case "e":
+                return "East";
+            case "s":
+                return "South";
+            case "n":
+                return "North";
+
+        }
+        return "";
+    }
 }

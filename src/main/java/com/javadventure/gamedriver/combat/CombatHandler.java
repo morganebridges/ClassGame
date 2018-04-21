@@ -27,6 +27,7 @@ public class CombatHandler {
                if(attemptedTarget.equals(room)){
                    System.out.println("You can't run that direction!");
                }else{
+                   System.out.println("You flee to the " + MovementDirections.getByCommand(nextCommand));
                    map.setCurrentRoom(attemptedTarget);
                    thread.flee();
                }

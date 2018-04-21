@@ -1,6 +1,8 @@
 package main.java.com.javadventure.player;
 
+import com.sun.istack.internal.Nullable;
 import main.java.com.javadventure.Items.Item;
+import main.java.com.javadventure.Items.Weapon;
 import main.java.com.javadventure.gamedriver.GameObject;
 import main.java.com.javadventure.map.GameMap;
 
@@ -17,6 +19,7 @@ public class Player extends GameObject {
 	private int level = 1;
 	String name;
 	String description = "A player";
+	Weapon currentWeapon;
 
 	private static final String stars = "\n**************";
 	Map<String, Item> itemMap = new HashMap<>();
@@ -35,8 +38,32 @@ public class Player extends GameObject {
 		this.potions = potions;
 		this.level = level;
 		this.name = name;
+
 	}
 
+	public void wield(String name){
+		for(Map.Entry<String, Item> item :itemMap.entrySet()){
+			if(item.getValue().isWieldable()){
+				Weapon weapon = (Weapon) item.getValue();
+				if(weapon.getLookList().contains(name)){
+					if(this.currentWeapon == null){
+						this.currentWeapon = weapon;
+						removeItem(weapon.getName());
+
+					}else{
+						removeItem(weapon.getName());
+						addItem(currentWeapon);
+						currentWeapon = weapon;
+
+					}
+					System.out.println("You wield " + weapon.getName());
+				}else{
+					System.out.println("I couldn't find the weapon you were looking for");
+				}
+
+			}
+		}
+	}
 	public void defeatMonster(int xp){
 		this.xp += xp;
 		if(this.xp / 10 >= level){
@@ -70,6 +97,9 @@ public class Player extends GameObject {
 			throw new RuntimeException("GameDriver Over, you have been defeated");
 		}
 	}
+	public @Nullable Weapon getCurrentWeapon(){
+		return currentWeapon;
+	}
 
 	public void addItem(Item item){
 		if(itemMap.containsKey(item.getName())){
@@ -97,6 +127,9 @@ public class Player extends GameObject {
 			for (Map.Entry<String, Item> itemEntry : itemMap.entrySet()) {
 				Item item = itemEntry.getValue();
 				inv += "\n" + itemEntry.getValue().getName() + (item.getCount() > 1 ? "(" + item.getCount() + ")" : "");
+			}
+			if(currentWeapon != null){
+				inv += "\n" + currentWeapon.getName() + "(wielded)";
 			}
 		}else{
 			inv += "\nYou currently have no items in your inventory";

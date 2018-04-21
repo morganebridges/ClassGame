@@ -33,9 +33,12 @@ public class ItemTaker {
         return null;
     }
     public static void takeAll(Room room, Player player){
-        for(Map.Entry<String, Item> item : room.getRoomItems().entrySet()){
-            System.out.println("You take " + item.getValue().getName());
-            player.addItem(item.getValue());
+        List<Item> tempList = new ArrayList<>();
+        tempList.addAll(room.getRoomItems().values());
+        for(Item item: tempList){
+            System.out.println("You take " + item.getName());
+            player.addItem(item);
+            room.getRoomItems().remove(item.getName());
         }
     }
     private static boolean matchesForItem(String command, List<String> lookList){
