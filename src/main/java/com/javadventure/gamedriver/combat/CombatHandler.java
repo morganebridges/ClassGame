@@ -17,7 +17,7 @@ public class CombatHandler {
     CommandHandler cmdHandler;
     public void startCombat(Scanner in, List<Monster> monsterList, Map<String, Monster> monsterRoomMap, Player player, Room room, GameMap map){
         this.cmdHandler = new CommandHandler();
-        CombatThread thread = new CombatThread(monsterList, monsterRoomMap, player);
+        CombatThread thread = new CombatThread(monsterList, monsterRoomMap, player, room);
         thread.start();
         while(thread.combatContinue){
             String nextCommand = in.next();
@@ -46,10 +46,12 @@ public class CombatHandler {
         Player player;
         Monster currentMonster;
         Map<String, Monster> monsterRoomMap;
-        CombatThread(List<Monster> monsterList, Map<String, Monster> monsterRoomMap, Player player){
+        Room currentRoom;
+        CombatThread(List<Monster> monsterList, Map<String, Monster> monsterRoomMap, Player player, Room room){
             this.monsterRoomMap = monsterRoomMap;
             this.monsterList = monsterList;
             this.player = player;
+            this.currentRoom = room;
         }
         boolean combatContinue = true;
         Duration roundTime = Duration.ofSeconds(1);
@@ -62,7 +64,7 @@ public class CombatHandler {
                     }
                     System.out.println("You hit " + currentMonster.getName() + " for " + player.getAttack() + " damage!");
                     System.out.println(currentMonster.healthBar());
-                    currentMonster.attack(player);
+                    currentMonster.attack(player, currentRoom);
                     if(currentMonster.getCurrentHp() >= 0){
                         System.out.println( currentMonster.getName() + " hit you" + " for " + currentMonster.getAttack() + " damage!");
                         player.attack(currentMonster.getAttack());

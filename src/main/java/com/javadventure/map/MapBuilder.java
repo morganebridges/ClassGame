@@ -1,10 +1,12 @@
 package main.java.com.javadventure.map;
 
+import main.java.com.javadventure.Items.Gold;
 import main.java.com.javadventure.Items.Item;
 import main.java.com.javadventure.Items.weapons.IronSword;
 import main.java.com.javadventure.map.rooms.Room;
 import main.java.com.javadventure.monsters.Monster;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,6 +46,7 @@ public class MapBuilder {
                 .addLookWord("bob")
                 .addLookWord("goblin")
                 .addLookWord("monster")
+                .drops(Arrays.asList(new Gold(20), new IronSword()))
                 .build();
 
         //Add Bob to our room
@@ -55,9 +58,11 @@ public class MapBuilder {
 
         //How about an item for our room?
         IronSword sword = new IronSword();
+        Gold gold = new Gold(1);
 
         //Add sword to item dictionary
         itemDictionary.put(sword.getName(), sword);
+        itemDictionary.put(gold.getName(), gold);
 
         eastLoginItemMap.put(sword.getName(), sword);
 

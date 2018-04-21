@@ -2,6 +2,7 @@ package main.java.com.javadventure.gamedriver.utils;
 
 import main.java.com.javadventure.Items.Item;
 import main.java.com.javadventure.map.rooms.Room;
+import main.java.com.javadventure.player.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.Map;
 
 public class ItemTaker {
     public static Item takeItem(String command, Room room){
+
         Item correctItem = null;
         int matchedItems = 0;
         if(room.getRoomItems() != null){
@@ -29,6 +31,12 @@ public class ItemTaker {
 
         }
         return null;
+    }
+    public static void takeAll(Room room, Player player){
+        for(Map.Entry<String, Item> item : room.getRoomItems().entrySet()){
+            System.out.println("You take " + item.getValue().getName());
+            player.addItem(item.getValue());
+        }
     }
     private static boolean matchesForItem(String command, List<String> lookList){
         String[] commandTokens = command.split(" ");

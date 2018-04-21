@@ -34,11 +34,14 @@ public class CommandHandler {
         }else if(nextCommand.contains("search")){
 
         }else if(nextCommand.contains("take")){
+            if(nextCommand.equals("take all")){
+                ItemTaker.takeAll(currentRoom, player);
+            }
             Item item = ItemTaker.takeItem(nextCommand, currentRoom);
             if(item != null){
                 player.addItem(item);
                 currentRoom.getRoomItems().remove(item.getName());
-                System.out.println("You have added " +((item.getCount() > 1) ? "a(n) " + item.getName() : item.getCount() + " " + item.getName() + "s to your inventory"));
+                System.out.println("You have added " + item.getName() + " to your inventory");
             }
         }else if(nextCommand.contains("help") || nextCommand.equals("h")){
             if(nextCommand.equals("help")){

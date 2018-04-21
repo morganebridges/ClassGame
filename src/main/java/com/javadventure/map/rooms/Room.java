@@ -90,6 +90,20 @@ public class Room {
         this.roomItems = roomItems;
     }
 
+    public void setHiddenItems(Map<String, Item> hiddenItems){
+        this.hiddenItems = hiddenItems;
+    }
+    public void addHiddenItem(Item item){
+        this.hiddenItems.put(item.getName(), item);
+    }
+    public void addRoomItem(Item item){
+        if(roomItems.get(item.getName()) != null){
+            roomItems.get(item.getName()).increaseBy(item.getCount());
+        }else{
+            this.roomItems.put(item.getName(), item);
+        }
+    }
+
     public Map<String, Monster> getRoomMonsters() {
         return roomMonsters;
     }
@@ -150,7 +164,8 @@ public class Room {
         private String eastExit;
         private String westExist;
         private String label;
-        Map<String, Item> roomItems;
+        Map<String, Item> roomItems = new HashMap<>();
+        Map<String, Item> hiddenItems = new HashMap<>();
         Map<String, Monster> roomMonsters;
 
         public Builder name(String name){
@@ -183,6 +198,11 @@ public class Room {
         }
         public Builder roomItems(Map<String, Item> roomItems){
             this.roomItems = roomItems;
+            return this;
+        }
+
+        public Builder hiddenItems(Map<String, Item> hiddenItems){
+            this.hiddenItems = hiddenItems;
             return this;
         }
 

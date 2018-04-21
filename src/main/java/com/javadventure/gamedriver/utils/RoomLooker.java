@@ -33,8 +33,12 @@ public class RoomLooker {
             for(Map.Entry<String, Monster> monsterEntry : room.getRoomMonsters().entrySet()){
                 List<String> lookList = monsterEntry.getValue().getLookList();
                 if(matchesForItem(command, lookList)){
+                    Monster monster = monsterEntry.getValue();
                     matchedItems++;
-                    correctDescription = monsterEntry.getValue().getDescription();
+                    correctDescription = monster.getDescription();
+                    for(Item drop : monster.getDrops()){
+                        correctDescription += "\n" + drop.getName() + (drop.getCount() > 1 ? "(" + drop.getCount() + ")" : "");
+                    }
 
                 }
             }

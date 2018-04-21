@@ -1,5 +1,6 @@
 package main.java.com.javadventure.gamedriver.persistence;
 
+import main.java.com.javadventure.Items.Item;
 import main.java.com.javadventure.map.GameMap;
 import main.java.com.javadventure.player.Player;
 
@@ -51,7 +52,9 @@ public class CharacterLoader {
                                 String[] itemEntry = itemToken.split(",");
                                 if(itemEntry.length == 2){
                                     if(map.getItemDictionary().containsKey(itemEntry[0])){
-                                        record.addItem(map.getItemDictionary().get(itemEntry[0]));
+                                        Item thisItem = map.getItemDictionary().get(itemEntry[0]);
+                                        thisItem.setCount(Integer.parseInt(itemEntry[1]));
+                                        record.addItem(thisItem);
                                     }
                                 }
                             }

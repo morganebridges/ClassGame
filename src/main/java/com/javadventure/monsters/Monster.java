@@ -2,6 +2,7 @@ package main.java.com.javadventure.monsters;
 
 import main.java.com.javadventure.Items.Item;
 import main.java.com.javadventure.gamedriver.GameObject;
+import main.java.com.javadventure.map.rooms.Room;
 import main.java.com.javadventure.player.Player;
 
 import java.util.ArrayList;
@@ -13,26 +14,32 @@ public class Monster extends GameObject {
 	protected int attack = 1;
 	protected boolean agro = false;
 	protected int xpValue = 2;
+	protected int gold = 2;
 
 	protected String description = "";
 	protected String name;
 	protected List<String> lookList = new ArrayList<>();
-
+	protected List<Item> drops = new ArrayList<>();
 
 	public Monster(String name){
 		this.name = name;
 	}
 
-	public boolean attack(Player player){
+	public boolean attack(Player player, Room room){
 		currentHp -= player.getAttack();
 		if(currentHp <= 0){
+			//Add all of the monsters items
 			player.defeatMonster(xpValue);
+			for (Item drop : drops) {
+				room.addRoomItem(drop);
+			}
 			return true;
 		}else{
 			return false;
 		}
 	}
-	public Monster(String name, int maxHp, int attack, String description, boolean isAgro){
+	public Monster(String name, int maxHp, int attack, String description, boolean isAgro, List<Item> drops){
+		this.drops = drops;
 		this.agro = isAgro;
 		this.name = name;
 		this.maxHp = maxHp;
@@ -107,6 +114,7 @@ public class Monster extends GameObject {
 	public List<String> getLookList(){
 		return lookList;
 	}
+	public List<Item> getDrops(){return drops;}
 
 	public static class Builder {
 		int maxHp;
@@ -115,6 +123,7 @@ public class Monster extends GameObject {
 		String description;
 		boolean agro;
 		List<String> lookList = new ArrayList<>();
+		List<Item> drops;
 
 		public Builder name(String name){
 			this.name = name;
@@ -141,8 +150,12 @@ public class Monster extends GameObject {
 			lookList.add(lookWord);
 			return this;
 		}
+		public Builder drops(List<Item> drops){
+			this.drops = drops;
+			return this;
+		}
 		public Monster build(){
-			Monster monster = new Monster(name, maxHp, attack, description, agro);
+			Monster monster = new Monster(name, maxHp, attack, description, agro, drops);
 			monster.getLookList().addAll(lookList);
 			return monster;
 		}

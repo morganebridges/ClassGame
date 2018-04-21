@@ -77,6 +77,9 @@ public class Item {
     public void incrementCount(){
         count += 1;
     }
+    public void setCount(int count){
+        this.count = count;
+    }
 
 
 
