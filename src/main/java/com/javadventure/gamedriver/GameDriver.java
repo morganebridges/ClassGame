@@ -2,7 +2,7 @@ package main.java.com.javadventure.gamedriver;
 
 import main.java.com.javadventure.gamedriver.commandHandlers.LoginHandler;
 import main.java.com.javadventure.gamedriver.input.ScannerIOSource;
-import main.java.com.javadventure.gamedriver.utils.input.InputSanitizer;
+import main.java.com.javadventure.gamedriver.input.InputSanitizer;
 import main.java.com.javadventure.map.GameMap;
 import main.java.com.javadventure.map.MapBuilder;
 import main.java.com.javadventure.map.rooms.Room;
@@ -46,8 +46,7 @@ public class GameDriver {
 	}
 	private static void mainLoop(){
 		while(!isTerminated){
-			in = new Scanner(System.in);
-			String nextCommand = san(in.nextLine());
+			String nextCommand = san(ScannerIOSource.INSTANCE.receiveUserInput());
 			if(nextCommand.equals("q") || nextCommand.equals("quit")){
 				ScannerIOSource.INSTANCE.sendUserOutput("Thank you for playing, " + activePlayer.getName());
 				activePlayersMap.remove(activePlayer.getName());
@@ -76,7 +75,7 @@ public class GameDriver {
 	public static String printSeperator(){
 		return "} }}  }}}__--^^^--___ -  -  - ___--^^^--__{{{   {{ {";
 	}
-	public  static String san(String in){
+	public static String san(String in){
 		return san.san(in);
 	}
 	//private static Player
