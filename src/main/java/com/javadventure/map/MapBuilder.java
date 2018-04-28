@@ -55,9 +55,9 @@ public class MapBuilder {
                 .description("A furry goblin, he looks happy enough...")
                 .hp(5)
                 .name("Rob the Hobgoblin")
-                .addLookWord("bob")
-                .addLookWord("goblin")
-                .addLookWord("monster")
+                .addLookWord("rob")
+                .addLookWord("goblin 2")
+                .addLookWord("monster 2")
                 .drops(Arrays.asList(new Gold(20), new IronSword()))
                 .build();
 

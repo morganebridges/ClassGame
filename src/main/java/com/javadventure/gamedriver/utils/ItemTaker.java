@@ -1,6 +1,7 @@
 package main.java.com.javadventure.gamedriver.utils;
 
 import main.java.com.javadventure.Items.Item;
+import main.java.com.javadventure.gamedriver.input.ScannerIOSource;
 import main.java.com.javadventure.map.rooms.Room;
 import main.java.com.javadventure.player.Player;
 
@@ -36,7 +37,7 @@ public class ItemTaker {
         List<Item> tempList = new ArrayList<>();
         tempList.addAll(room.getRoomItems().values());
         for(Item item: tempList){
-            System.out.println("You take " + item.getName());
+            ScannerIOSource.INSTANCE.sendUserOutput("You take " + item.getName());
             player.addItem(item);
             room.getRoomItems().remove(item.getName());
         }

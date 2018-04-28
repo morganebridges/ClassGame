@@ -2,8 +2,10 @@ package main.java.com.javadventure.gamedriver;
 
 import main.java.com.javadventure.Items.Item;
 import main.java.com.javadventure.gamedriver.combat.CombatHandler;
+import main.java.com.javadventure.gamedriver.input.EngineIOSource;
 import main.java.com.javadventure.gamedriver.persistence.CharacterSaver;
-import main.java.com.javadventure.gamedriver.utils.InputSanitizer;
+import main.java.com.javadventure.gamedriver.utils.input.InputIdentifier;
+import main.java.com.javadventure.gamedriver.utils.input.InputSanitizer;
 import main.java.com.javadventure.gamedriver.utils.ItemTaker;
 import main.java.com.javadventure.gamedriver.utils.RoomLooker;
 import main.java.com.javadventure.gamedriver.utils.WeaponWielder;
@@ -18,23 +20,30 @@ import java.util.*;
 
 public class CommandHandler {
     private static InputSanitizer san = new InputSanitizer();
+    private static InputIdentifier inIder = new InputIdentifier();
+    private EngineIOSource ioSource;
+
+    public CommandHandler(EngineIOSource ioSource){
+        this.ioSource = ioSource;
+    }
 
     public void handleCommand(Player player, GameMap map, String nextCommand, Scanner in){
         Room currentRoom = map.getCurrentRoom();
         System.out.println(player.toString());
 
-        if(nextCommand.contains("look") || nextCommand.equals("l")){
-            if(nextCommand.contains("at")){
-                System.out.println(RoomLooker.lookAtThing(nextCommand, currentRoom));
+
+        if(inIder.isLookCommand(nextCommand)){
+            if(inIder.isLookAtCommand(nextCommand)){
+                ioSource.sendUserOutput(RoomLooker.lookAtThing(nextCommand, currentRoom));
             }else if(currentRoom != null){
-                System.out.println(currentRoom.toDisplay());
+                ioSource.sendUserOutput(currentRoom.toDisplay());
             }
-        }else if(nextCommand.contains("fight")){
+        }else if(inIder.isFightCommand(nextCommand) && currentRoom.getRoomMonsters().size() > 0){
             CombatHandler handler = new CombatHandler();
             handler.startCombat(in, getMonsterList(currentRoom.getRoomMonsters()), currentRoom.getRoomMonsters(), player, currentRoom, map);
         }else if(nextCommand.contains("search")){
 
-        }else if(nextCommand.contains("take")){
+        }else if(inIder.isTakeCommand(nextCommand)){
             if(nextCommand.equals("take all")){
                 ItemTaker.takeAll(currentRoom, player);
             }
@@ -44,13 +53,11 @@ public class CommandHandler {
                 currentRoom.getRoomItems().remove(item.getName());
                 System.out.println("You have added " + item.getName() + " to your inventory");
             }
-        }else if(nextCommand.contains("help") || nextCommand.equals("h")){
-            if(nextCommand.equals("help")){
-                System.out.println(Help.callHelp());
-            }
-        }else if(nextCommand.contains("wield")){
+        }else if(inIder.isHelpCommand(nextCommand)){
+            ioSource.sendUserOutput(Help.callHelp());
+        }else if(inIder.isWieldCommand(nextCommand)){
             WeaponWielder.wield(player, nextCommand);
-        }else if(nextCommand.equals("save")){
+        }else if(inIder.isSaveCommand(nextCommand)){
             CharacterSaver.saveCharacter(player);
             System.out.println("You have saved your character");
         }else if(MovementHandler.isMovementCommand(nextCommand)){

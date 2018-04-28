@@ -1,6 +1,7 @@
 package main.java.com.javadventure.gamedriver.combat;
 
 import main.java.com.javadventure.gamedriver.CommandHandler;
+import main.java.com.javadventure.gamedriver.input.ScannerIOSource;
 import main.java.com.javadventure.map.GameMap;
 import main.java.com.javadventure.map.MovementHandler;
 import main.java.com.javadventure.map.rooms.MovementDirections;
@@ -16,7 +17,7 @@ import java.util.Scanner;
 public class CombatHandler {
     CommandHandler cmdHandler;
     public void startCombat(Scanner in, List<Monster> monsterList, Map<String, Monster> monsterRoomMap, Player player, Room room, GameMap map){
-        this.cmdHandler = new CommandHandler();
+        this.cmdHandler = new CommandHandler(ScannerIOSource.INSTANCE);
         CombatThread thread = new CombatThread(monsterList, monsterRoomMap, player, room);
         thread.start();
         while(thread.combatContinue){
@@ -25,9 +26,9 @@ public class CombatHandler {
             if(MovementHandler.isMovementCommand(nextCommand)){
                Room attemptedTarget = MovementHandler.handleMovement(nextCommand, room, map);
                if(attemptedTarget.equals(room)){
-                   System.out.println("You can't run that direction!");
+                   ScannerIOSource.INSTANCE.sendUserOutput(("You can't run that direction!"));
                }else{
-                   System.out.println("You flee to the " + MovementDirections.getByCommand(nextCommand));
+                   ScannerIOSource.INSTANCE.sendUserOutput(("You flee to the " + MovementDirections.getByCommand(nextCommand)));
                    map.setCurrentRoom(attemptedTarget);
                    thread.flee();
                }
@@ -63,18 +64,18 @@ public class CombatHandler {
                     if(currentMonster == null){
                         currentMonster = monsterList.remove(0);
                     }
-                    System.out.println("You hit " + currentMonster.getName() + " for " + player.getAttack() + " damage!");
-                    System.out.println(currentMonster.healthBar());
+                    ScannerIOSource.INSTANCE.sendUserOutput(("You hit " + currentMonster.getName() + " for " + player.getAttack() + " damage!"));
+                    ScannerIOSource.INSTANCE.sendUserOutput((currentMonster.healthBar()));
                     currentMonster.attack(player, currentRoom);
                     if(currentMonster.getCurrentHp() >= 0){
-                        System.out.println( currentMonster.getName() + " hit you" + " for " + currentMonster.getAttack() + " damage!");
+                        ScannerIOSource.INSTANCE.sendUserOutput(( currentMonster.getName() + " hit you" + " for " + currentMonster.getAttack() + " damage!"));
                         player.attack(currentMonster.getAttack());
                     }else{
-                        System.out.println("You have defeated " + currentMonster.getName());
+                        ScannerIOSource.INSTANCE.sendUserOutput(("You have defeated " + currentMonster.getName()));
                         monsterRoomMap.remove(currentMonster.getName());
                         currentMonster = null;
                     }
-                    System.out.println(player.toString());
+                    ScannerIOSource.INSTANCE.sendUserOutput((player.toString()));
                     sleep(roundTime.toMillis());
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -85,7 +86,7 @@ public class CombatHandler {
                 }
                 if(player.getCurrentHp() <= 0){
                     combatContinue = false;
-                    System.out.println("You have been defeated");
+                    ScannerIOSource.INSTANCE.sendUserOutput(("You have been defeated"));
                     System.exit(0);
                 }
             }

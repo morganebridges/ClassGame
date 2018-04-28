@@ -1,15 +1,11 @@
 package main.java.com.javadventure.gamedriver;
 
 import main.java.com.javadventure.gamedriver.commandHandlers.LoginHandler;
-import main.java.com.javadventure.gamedriver.persistence.CharacterLoader;
-import main.java.com.javadventure.gamedriver.persistence.CharacterSaver;
-import main.java.com.javadventure.gamedriver.utils.InputSanitizer;
-import main.java.com.javadventure.help.Help;
+import main.java.com.javadventure.gamedriver.input.ScannerIOSource;
+import main.java.com.javadventure.gamedriver.utils.input.InputSanitizer;
 import main.java.com.javadventure.map.GameMap;
 import main.java.com.javadventure.map.MapBuilder;
-import main.java.com.javadventure.map.MovementHandler;
 import main.java.com.javadventure.map.rooms.Room;
-import main.java.com.javadventure.monsters.Monster;
 import main.java.com.javadventure.player.Player;
 
 import java.util.HashMap;
@@ -17,7 +13,7 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class GameDriver {
-	//isTerminated is a "Sentinal" value that we check to see if the player has decided to quit the game.
+	//isTerminated is a "Sentinel" value that we check to see if the player has decided to quit the game.
 	public static boolean isTerminated = false;
 
 	//A data structure for containing the active players in the game
@@ -34,10 +30,15 @@ public class GameDriver {
 	private static GameMap map = MapBuilder.buildMap();
 
 	//An object to encapsulate the handling of user commands
-	private static CommandHandler cmdHandler = new CommandHandler();
+	private static CommandHandler cmdHandler = new CommandHandler(ScannerIOSource.INSTANCE);
 
 	//Current room
 	private static Room currentRoom = map.getRoomByName("loginRoom");
+
+	/**
+	 * This is the main method of our application, it is the runnable application.
+	 * @param args
+	 */
 	public static void main(String[] args){
 		//Pass the work to the login handler
 		loginLoop();
@@ -48,7 +49,7 @@ public class GameDriver {
 			in = new Scanner(System.in);
 			String nextCommand = san(in.nextLine());
 			if(nextCommand.equals("q") || nextCommand.equals("quit")){
-				System.out.println("Thank you for playing, " + activePlayer.getName());
+				ScannerIOSource.INSTANCE.sendUserOutput("Thank you for playing, " + activePlayer.getName());
 				activePlayersMap.remove(activePlayer.getName());
 				activePlayer = null;
 				isTerminated = true;
@@ -58,19 +59,22 @@ public class GameDriver {
 		}
 	}
 	private static void loginLoop(){
-		printSeperator();
-		System.out.println("Welcome to JavAdventure!");
+		ScannerIOSource.INSTANCE.sendUserOutput(printSeperator());
+		ScannerIOSource.INSTANCE.sendUserOutput("Welcome to JavAdventure!");
 		Player player;
+
+		//We need to run the login loop until the player has logged in
 		while((player = LoginHandler.login(in, map)) == null);
+
 		activePlayersMap.put(player.getName(), player);
 		activePlayer = player;
 		map.setCurrentRoom(map.getRoomByName("loginRoom"));
-		System.out.println(map.getCurrentRoom().toDisplay());
+		ScannerIOSource.INSTANCE.sendUserOutput(map.getCurrentRoom().toDisplay());
 		mainLoop();
 	}
 
-	public static void printSeperator(){
-		System.out.println("} }}  }}}__--^^^--___ -  -  - ___--^^^--__{{{   {{ {");
+	public static String printSeperator(){
+		return "} }}  }}}__--^^^--___ -  -  - ___--^^^--__{{{   {{ {";
 	}
 	public  static String san(String in){
 		return san.san(in);
