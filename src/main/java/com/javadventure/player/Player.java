@@ -141,7 +141,7 @@ public class Player extends GameObject {
 		String score = stars;
 		score += "\nLevel: " + level;
 		score += "\nXP: " + xp;
-		score += "\nAttack power:" + attack;
+		score += "\nAttack power:" + (attack + (currentWeapon != null ? currentWeapon.getDamage(): 0));
 		return score;
 	}
 	public int getXp() {
