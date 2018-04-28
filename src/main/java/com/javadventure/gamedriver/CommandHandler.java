@@ -3,6 +3,7 @@ package main.java.com.javadventure.gamedriver;
 import main.java.com.javadventure.Items.Item;
 import main.java.com.javadventure.gamedriver.combat.CombatHandler;
 import main.java.com.javadventure.gamedriver.input.EngineIOSource;
+import main.java.com.javadventure.gamedriver.input.ScannerIOSource;
 import main.java.com.javadventure.gamedriver.persistence.CharacterSaver;
 import main.java.com.javadventure.gamedriver.utils.input.InputIdentifier;
 import main.java.com.javadventure.gamedriver.utils.input.InputSanitizer;
@@ -38,7 +39,12 @@ public class CommandHandler {
             }else if(currentRoom != null){
                 ioSource.sendUserOutput(currentRoom.toDisplay());
             }
-        }else if(inIder.isFightCommand(nextCommand) && currentRoom.getRoomMonsters().size() > 0){
+        }else if(inIder.isFightCommand(nextCommand)){
+            //If we don't have any room monsters, don't start combat.
+            if(currentRoom.getRoomMonsters() == null){
+                ScannerIOSource.INSTANCE.sendUserOutput("There are no monsters in this room.");
+                return;
+            }
             CombatHandler handler = new CombatHandler();
             handler.startCombat(in, getMonsterList(currentRoom.getRoomMonsters()), currentRoom.getRoomMonsters(), player, currentRoom, map);
         }else if(nextCommand.contains("search")){

@@ -17,6 +17,11 @@ import java.util.Scanner;
 public class CombatHandler {
     CommandHandler cmdHandler;
     public void startCombat(Scanner in, List<Monster> monsterList, Map<String, Monster> monsterRoomMap, Player player, Room room, GameMap map){
+
+        if(monsterList.size() < 1){
+            ScannerIOSource.INSTANCE.sendUserOutput("There are no monsters to fight right now.");
+            return;
+        }
         this.cmdHandler = new CommandHandler(ScannerIOSource.INSTANCE);
         CombatThread thread = new CombatThread(monsterList, monsterRoomMap, player, room);
         thread.start();
