@@ -29,9 +29,9 @@ public class InputIdentifier {
 		return isCommand(nextCommand, lookList);
 	}
 	
-	
+
 	public boolean isLookAtCommand(String nextCommand){
-		return isCommand(nextCommand, lookList) && nextCommand.contains("at");
+		return nextCommand.contains("at");
 	}
 	
 	public boolean isTakeCommand(String nextCommand){
@@ -44,11 +44,8 @@ public class InputIdentifier {
 	public boolean isWearCommand(String nextCommand){
 		return isCommand(nextCommand, wearList);
 	}
-
-
-
 	
 	private boolean isCommand(String nextCommand, List<String> cmdList){
-		return cmdList.contains(nextCommand);
+		return cmdList.contains(nextCommand.split(" ")[0]);
 	}
 }
